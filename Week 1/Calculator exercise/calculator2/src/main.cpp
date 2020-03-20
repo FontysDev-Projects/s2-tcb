@@ -5,7 +5,7 @@ void setup()
   // put your setup code here, to run once:
   pinMode(RED_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
-  PORTD = 0;
+  PORTD = PORTD & B11111111;
   Serial.begin(9600);
 
   Serial.println("\nHi, I am Calculus!");

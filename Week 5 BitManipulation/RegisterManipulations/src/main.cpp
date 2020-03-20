@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #define PUSH_BUTTON_PIN PIND7
-#define LED_PIN PINB3
+#define LED_PIN PINB2
 
 #define Debounce_T 20
 #define PWM_Cycle 5000
@@ -30,7 +30,7 @@ void setup()
   DDRD &= ~(1 << PUSH_BUTTON_PIN); // sets the Button to Input
 
   PORTB &= ~(1 << LED_PIN);        // sets the state of the LED (pin 10) to LOW
-  PORTB |= (1 << PUSH_BUTTON_PIN); // unables the pull-up resistor for the Button (pin 10)
+  PORTD |= (1 << PUSH_BUTTON_PIN); // unables the pull-up resistor for the Button (pin 7)
 
   // PCMSK2 |= 1 << PCINT23; // Configure pin change interrupt on the button (pin 7)
   // PCIFR |= 1 << PCIF2;    // Clear interrupt flag
@@ -44,11 +44,11 @@ void loop()
   ButtonState();
   if (ledState == ON)
   {
-    pwmLEDBlink(LED_PIN, 225);
+    pwmLEDBlink(LED_PIN, 255);
   }
   else
   {
-    PORTD &= ~(1 << LED_PIN);
+    PORTB &= ~(1 << LED_PIN);
   }
 }
 
@@ -63,7 +63,7 @@ void ButtonState()
       debounceTimer = millis();
       if (currentState == LOW)
       {
-        if (((PIND >> LED_PIN) & 1) == 1)
+        if (((PINB >> LED_PIN) & 1) == 1)
         {
           ledState = OFF;
         }
