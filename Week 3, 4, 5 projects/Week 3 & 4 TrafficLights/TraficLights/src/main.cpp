@@ -13,7 +13,7 @@ void setup()
   Serial.begin(9600);
   traficLightBus.begin(9600);
 
-  isMaster = true+;
+  isMaster = false;
   ThereIsACar = false;
 }
 
