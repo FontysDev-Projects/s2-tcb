@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Stack.h"
+#include "ArrayStack.h"
 
 void AskForInput(double *InputVal);
 
@@ -24,17 +24,17 @@ int main()
 		switch (State)
 		{
 		case 1:
-			stack_create();
+			stack_create() ? printf("Error, Stack was not created!\n") : printf("Stack Created!\n");
 			break;
 		case 2:
 			AskForInput(&InputValue);
-			stack_push(&InputValue);
+			stack_push(&InputValue) ? printf("Error occured! Element was not push.\n") : printf("Element successfully pushed!\n");
 			break;
 		case 3:
-			stack_pop(&ExtractedValue);
+			stack_pop(&ExtractedValue) ? printf("Error occured! Element was not poped.\n") : printf("Element successfully poped! Element: %lf\n", ExtractedValue);
 			break;
 		case 4:
-			stack_top(&ExtractedValue);
+			stack_top(&ExtractedValue) ? printf("Error occured! Element was not Found.\n") : printf("Top element of the stack: %lf\n", ExtractedValue);
 			break;
 		case 5:
 			stack_destroy();

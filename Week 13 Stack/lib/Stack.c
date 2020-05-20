@@ -52,9 +52,6 @@ int stack_push(const double *elem)
 
 int stack_pop(double *elem)
 {
-    if (!elem)
-        return -1;
-
     if (!head)
         return -1;
 
