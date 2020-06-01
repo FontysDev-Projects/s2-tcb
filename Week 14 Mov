@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include "Queue.h"
+#define QueueSize 10
+
+int main()
+{
+	char input = 'a';
+	double runingAverage;
+	double DeQueueOut;
+	double InitValues[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+	int iterations = 5;
+	// (sizeof(InitValues) / sizeof(InitValues[0]));
+	if (CreateQueue(QueueSize))
+	{
+		printf("Couldn't create a Queue!\n");
+		exit(1);
+	}
+	printf("Queue created\n");
+
+	while (input != 'q')
+	{
+		for (int i = 0; i < iterations; i++)
+		{
+			if (Count() >= QueueSize)
+				DeQueue(&DeQueueOut);
+
+			EnQueue(InitValues[i]);
+			RuningAverage(&runingAverage);
+
+			printf("The running average is: %lf\n", runingAverage);
+		}
+		printf("Do you want to close the app? [type: q] ");
+		scanf("%c", &input);
+	}
+
+	return (0);
+}#include "Queue.h"
+
+// Queue properties
+int Capacity;
+int ElementCount = 0;
+double ValueSum = 0;
+// array pointer
+double *Queue;
+// the index of the first element of the queue
+int front = 0;
+
+int CreateQueue(const int Size)
+{
+    if (Size <= 0)
+        return -1;
+
+    Queue = (double *)calloc(Size, sizeof(double));
+    Capacity = Size;
+
+    if (!Queue)
+        return -2;
+
+    return 0;
+}
+
+int DestroyQueue()
+{
+    free(Queue);
+
+    if (!Queue)
+        return 0;
+
+    return -1;
+}
+
+int Count() { return ElementCount; }
+
+int EnQueue(const double newElement)
+{
+    if (!Queue)
+        return -1;
+
+    if (ElementCount >= Capacity)
+        return -2;
+
+    Queue[(front + ElementCount++) % Capacity] = newElement;
+    ValueSum += newElement;
+
+    return 0;
+}
+
+int DeQueue(double *elem)
+{
+    if (!Queue)
+        return -1;
+
+    if (ElementCount <= 0)
+        return -2;
+
+    *elem = Queue[front];
+    ElementCount--;
+    (++front == Capacity) ? front = 0 : 0;
+    ValueSum -= *elem;
+
+    return 0;
+}
+
+int ReverseQueue()
+{
+    if (!Queue)
+        return -1;
+
+    if (ElementCount <= 1)
+        return -2;
+
+    double Temp;
+    for (int i = 0; i < ElementCount / 2; i++)
+    {
+        Temp = Queue[(front + ElementCount + i) % ElementCount];
+        Queue[(front + ElementCount + i) % ElementCount] = Queue[(front + (ElementCount - i - 1)) % ElementCount];
+        Queue[(front + (ElementCount - i - 1)) % ElementCount] = Temp;
+    }
+    return 0;
+}
+
+int RuningAverage(double *OutputAverage)
+{
+    if (!Queue)
+        return -1;
+
+    if (ValueSum <= 0 || ElementCount <= 0)
+        return -2;
+
+    *OutputAverage = ValueSum / ElementCount;
+    return 0;
+}
+
+void PrintQueue()
+{
+    for (int i = 0; i < ElementCount; i++)
+    {
+        printf("%lf ", Queue[i]);
+    }
+    printf("\n");
+}#ifndef QUEUE
+#define QUEUE
+#include <stdlib.h>
+#include <stdio.h>
+
+//Function to create a Queue
+int CreateQueue(const int);
+//Destroys the current instance of the
+int DestroyQueue();
+//
+int EnQueue(const double);
+
+int DeQueue(double *);
+
+int ReverseQueue();
+
+int RuningAverage(double *);
+
+void PrintQueue();
+
+int Count();
+#endif
