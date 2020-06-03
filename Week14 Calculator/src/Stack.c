@@ -1,5 +1,5 @@
 #include "Stack.h"
-#include <stdio.h>
+// #include <stdio.h>
 
 /*
 * Creates the new stack. Returns 0 on success
@@ -86,28 +86,28 @@ static int Push(struct Stack *this, void *newElement)
 {
     if (!this)
         return -1;
-    printf("0.4\n");
+    // printf("0.4\n");
 
     if (!newElement)
         return -2;
-    printf("0.5\n");
+    // printf("0.5\n");
 
     if (this->ElementCount >= this->StackCapacity)
         return -3;
-    printf("0.6\n");
+    // printf("0.6\n");
 
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
     newNode->data = newElement;
     newNode->next = NULL;
 
-    printf("0.7\n");
+    // printf("0.7\n");
     if (!this->head)
     {
         this->head = newNode;
         this->ElementCount++;
         return 0;
     }
-    printf("0.8\n");
+    // printf("0.8\n");
     newNode->next = this->head;
     this->head = newNode;
     this->ElementCount++;
@@ -138,17 +138,17 @@ static int Top(struct Stack *this, void **elem)
 {
     if (!this)
         return -1;
-    printf("0.1\n");
+    // printf("0.1\n");
 
     if (!this->head)
         return -2;
-    printf("0.2\n");
+    // printf("0.2\n");
 
     if (!this->head->data)
         return -3;
-    printf("0.3\n");
+    // printf("0.3\n");
 
     *elem = this->head->data;
-    printf("0.3.1\n");
+    // printf("0.3.1\n");
     return 0;
 }

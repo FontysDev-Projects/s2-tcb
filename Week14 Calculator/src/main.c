@@ -1,60 +1,98 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "InputStrem.h"
-#include "Stack.h"
+#include "DataProcessing.h"
 
-typedef enum ProgramStates
+#define MathExpression Argv[1]
+#define input Argv[1][i]
+
+int NumChar = 0;
+
+int main(int Argc, char *Argv[])
 {
-	S_INPUTING,
-	S_PREPROCESSING,
-	S_PROCESSING,
-	S_OUTPUTING
-} ProgramStates;
+	/**
+	 * 1. Checking for valid input
+	 * 2. Checking for sufficient memory
+	 */
+	if (Argc > 2)
+	{
+		printf("Too many Arguments supplied!");
+		exit(1);
+	}
+	if (Argc < 2)
+	{
+		printf("2 Arguments expected!");
+		exit(1);
+	}
 
-char inputChar;
-int A = 0;
-int B = 0;
-
-int main()
-{
-	struct Stack *ConversionStack = Stack.new(10);
 	struct Stack *OperatorStack = Stack.new(50);
 	struct Stack *OperantStack = Stack.new(50);
-
-	if (!ConversionStack)
-		exit(-1);
 	if (!OperatorStack)
 		exit(-2);
 	if (!OperantStack)
 		exit(-3);
 
-	ProgramStates ProgramState = S_INPUTING;
+	/**
+	 * Preconfiguring and preprocessing the math expression 
+	 */
+	int MathExpressionLenght = strlen(MathExpression);
 
-	while (1)
+	for (int i = 0; i < MathExpressionLenght; i++)
 	{
-		switch (ProgramState)
-		{
-		case S_INPUTING:
-			inputChar = getchar();
-			if (inputChar != EOF)
-				FilterInput(ConversionStack, OperatorStack, OperantStack, &inputChar);
-			// ProgramState = S_PROCESSING;
+		printf("%c", input);
 
-			// ProgramState = S_PREPROCESSING;
-			break;
-		case S_PREPROCESSING:
-			ProgramState = S_INPUTING;
-			break;
-		case S_PROCESSING:
-			ProgramState = S_OUTPUTING;
-			break;
-		case S_OUTPUTING:
-			ProgramState = S_INPUTING;
-			break;
+		if (CheckOperant(input))
+		{
+			// printf("It is a Num!\n");
+			NumChar = NumChar * 10 + ((int)(input) - (int)'0');
+			continue;
+		}
+
+		if (CheckOperator(input))
+		{
+			// printf("It is an Operator!\n");
+			if (NumChar > 0)
+			{
+				if (AddOperant(OperantStack, (double)NumChar))
+				{
+					printf("Unable to add operant %d!", NumChar);
+					exit(-4);
+				}
+			}
+			NumChar = 0;
+			void *PoppedOperator = NULL;
+			if (AddOperator(OperatorStack, &input, &PoppedOperator))
+				continue;
+
+			ExecuteOperator(OperantStack, PoppedOperator);
 		}
 	}
+	if (NumChar > 0)
+		if (AddOperant(OperantStack, (double)NumChar))
+		{
+			printf("Unable to add operant %d!", NumChar);
+			exit(-4.1);
+		}
 
-	return (0);
+	/**
+	 * Processing the preconfigured Math Expresion!
+	 * pushes the result on the Operant stack 
+	 */
+	ProcessData(OperantStack, OperatorStack);
 
-	//Filterinput
+	/**
+	 * Outputs the result of the Math Expresion
+	 */
+	double *ExpresionOutput;
+	OperantStack->Pop(OperantStack, (void *)&ExpresionOutput);
+	printf("=%f\n", *ExpresionOutput);
+
+	/**
+	 * Prints the main.c source code
+	 */
+	// printf("\nThe main source code!\n\n");
+	// system("cat src\\main.c");
+
+	return (*ExpresionOutput);
 }

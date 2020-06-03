@@ -1,6 +1,7 @@
 #ifndef __STACK_H__
 #define __STACK_H__
 #include <stdlib.h>
+#include "Nodes.h"
 
 struct Stack
 {
@@ -22,11 +23,5 @@ extern const struct StackClass
     struct Stack *(*new)(int size);
     int (*DestroyStack)(struct Stack *);
 } Stack;
-
-struct Node
-{
-    void *data;
-    struct Node *next;
-};
 
 #endif
